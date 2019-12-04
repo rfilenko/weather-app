@@ -7,7 +7,7 @@ const Btn = styled.button`
   color: ${props => (props.primary ? "white" : "#4299e1")};
 
   font-size: 1em;
-  margin: 1em;
+  margin: 1em 0;
   padding: 0.25em 1em;
   border: 2px solid #4299e1;
   padding-left: 2rem;
@@ -17,8 +17,13 @@ const Btn = styled.button`
   font-weight: 700;
   border-radius: 0.25rem;
 `;
-
-const Button = ({ text }) => {
+export const Button = ({ text }) => {
   return <Btn>{text}</Btn>;
 };
-export default Button;
+export const WeatherButton = ({ text, fetchData, primary }) => {
+  return (
+    <Btn primary onClick={fetchData}>
+      {text}
+    </Btn>
+  );
+};

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Input = styled.input`
+const Inpt = styled.input`
   width: 100%;
   color: #4a5568;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -22,7 +22,15 @@ const Input = styled.input`
   }
 `;
 
-const Button = ({ id, type, placeholder }) => {
-  return <Input id={id} type={type} placeholder={placeholder} />;
+const Input = ({ id, type, placeholder, inputValue, handleInput }) => {
+  return (
+    <Inpt
+      id={id}
+      type={type}
+      placeholder={placeholder}
+      value={inputValue ? inputValue : ""}
+      onChange={handleInput}
+    />
+  );
 };
-export default Button;
+export default Input;
