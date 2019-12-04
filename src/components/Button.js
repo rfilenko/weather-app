@@ -16,13 +16,29 @@ const Btn = styled.button`
   padding-bottom: 0.5rem;
   font-weight: 700;
   border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.25s ease-in;
+
+  &:hover {
+    opacity: 0.95;
+  }
+  //alignment
+  align-self: ${props => (props.alignSelf ? "center" : "flex-start")};
+  width: ${props => props.inputWidth || "100%"};
 `;
 export const Button = ({ text }) => {
   return <Btn>{text}</Btn>;
 };
-export const WeatherButton = ({ text, fetchData, primary }) => {
+export const WeatherButton = ({ text, fetchData }) => {
   return (
     <Btn primary onClick={fetchData}>
+      {text}
+    </Btn>
+  );
+};
+export const InfoButton = ({ text, infoData }) => {
+  return (
+    <Btn alignSelf inputWidth onClick={infoData}>
       {text}
     </Btn>
   );

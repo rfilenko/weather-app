@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import FormComponent from "./components/FormComponent";
+import Info from "./components/Info";
+import { Wrapper, InfoWrapper } from "./components/Wrapper";
+import weatherIcon from "./images/weatherIcon.png";
+
+const imgStyles = {
+  display: "inline-block",
+  verticalAlign: "middle",
+  marginRight: ".5rem"
+};
 
 const Title = styled.h2`
   font-size: 1.5em;
   text-align: center;
   color: #4a5568;
   flex-basis: 100%;
-`;
-const Wrapper = styled.section`
-  padding: 2rem 4rem;
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  background: #edf2f7;
-  min-height: 50vh;
 `;
 
 class App extends Component {
@@ -25,9 +26,12 @@ class App extends Component {
       code: null,
       cityInfo: null,
       inputValue: "Prague",
-      imgIcon: ""
+      imgIcon: "",
+      isVisible: false
     };
     this.handleInput = this.handleInput.bind(this);
+    this.getInfo = this.getInfo.bind(this);
+    this.infoData = this.infoData.bind(this);
     this.fetchData = this.fetchData.bind(this);
   }
   getWeather() {
@@ -44,12 +48,29 @@ class App extends Component {
         this.setState({
           data: dataJson,
           imgIcon: weather.icon,
-          code: sys.country
+          code: sys.country,
+          isVisible: true
         });
       });
   }
+  //get info
+  getInfo() {
+    fetch("https://restcountries.eu/rest/v2/alpha/" + this.state.code)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ cityInfo: data });
+      })
+      .catch(err => console.log(err));
+  }
   fetchData() {
     this.getWeather();
+  }
+
+  // get data
+  infoData() {
+    if (this.state.data) {
+      this.getInfo();
+    }
   }
   //handle input
   handleInput(e) {
@@ -60,7 +81,10 @@ class App extends Component {
     return (
       <div className="App">
         <Wrapper>
-          <Title>weather app</Title>
+          <Title>
+            <img src={weatherIcon} width="50" style={imgStyles} />
+            weather app
+          </Title>
           <FormComponent
             data={this.state.data}
             inputValue={this.state.inputValue}
@@ -68,6 +92,15 @@ class App extends Component {
             handleInput={this.handleInput}
           />
         </Wrapper>
+        <InfoWrapper>
+          {this.state.isVisible ? (
+            <Info
+              cityInfo={this.state.cityInfo}
+              infoData={this.infoData}
+              fetchData={this.fetchData}
+            />
+          ) : null}
+        </InfoWrapper>
       </div>
     );
   }
