@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import WeatherUI from "./WeatherUI";
+import WeatherInfo from "./WeatherInfo";
 import { WeatherButton } from "./Button";
+import { InfoButton } from "./Button";
 import Input from "./Input";
 import Label from "./Label";
 
@@ -15,13 +16,17 @@ const Form = styled.form`
   padding-left: 2rem;
   padding-right: 2rem;
   margin-bottom: 1rem;
-  border-radius: 0.25rem;
   background-color: #fff;
   align-self: flex-start;
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 `;
 
 const FormComponent = props => {
-  const { data, inputValue, handleInput, fetchData } = props;
+  const { inputValue, isDisabled, handleInput, fetchData, infoData } = props;
   return (
     <>
       <Form onSubmit={handleInput}>
@@ -33,14 +38,15 @@ const FormComponent = props => {
           inputValue={inputValue}
           handleInput={handleInput}
         />
-        <WeatherButton primary text="Check weather" fetchData={fetchData} />
+        <WeatherButton
+          primary
+          text="Check weather"
+          fetchData={fetchData}
+          isDisabled={isDisabled}
+        />
+        <InfoButton inputWidth="50px" text="Country Info" infoData={infoData} />
       </Form>
-      <WeatherUI
-        data={data}
-        inputValue={props.inputValue}
-        fetchData={props.fetchData}
-        handleInput={props.handleInput}
-      />
+      <WeatherInfo {...props} fetchData={fetchData} />
     </>
   );
 };

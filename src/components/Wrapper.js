@@ -6,8 +6,6 @@ const Wrappr = styled.section`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  background: #edf2f7;
-  min-height: 400px;
 `;
 const InfoWrappr = styled(Wrappr)`
   justify-content: flex-start;
