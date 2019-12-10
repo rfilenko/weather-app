@@ -43,7 +43,7 @@ const WeatherInfoBlock = styled.section`
       color: orange;
     }
     p {
-        color: #13022C;
+      color: #13022c;
       margin: 0;
       padding: 0 20px;
       display: flex;
@@ -52,7 +52,6 @@ const WeatherInfoBlock = styled.section`
     }
   }
 `;
-
 const WeatherInfo = props => {
   const { data } = props;
   return (
@@ -63,7 +62,7 @@ const WeatherInfo = props => {
             {data.name}, {data.sys.country}
           </p>
           <div className="conditions">
-            <h3>{data.main.temp}°</h3>
+            <h3>{data.main.temp.toFixed(0)}°</h3>
             <p>
               <img
                 width="45"
