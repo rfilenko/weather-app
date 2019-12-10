@@ -25,6 +25,7 @@ class App extends Component {
     this.handleInput = this.handleInput.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.infoData = this.infoData.bind(this);
+    this.closeInfo = this.closeInfo.bind(this);
     this.fetchData = this.fetchData.bind(this);
   }
 
@@ -63,7 +64,7 @@ class App extends Component {
     fetch("https://restcountries.eu/rest/v2/alpha/" + this.state.code)
       .then(response => response.json())
       .then(data => {
-        this.setState({ cityInfo: data, isVisible: true });
+        this.setState({ cityInfo: data, isVisible: !this.state.isVisible });
       })
       .catch(err => console.log(err));
   }
@@ -119,8 +120,14 @@ class App extends Component {
     e.preventDefault();
     this.setState({
       inputValue: e.target.value,
-      isVisible: false,
       isDisabled: false
+    });
+  }
+
+  closeInfo() {
+    console.log("clicked");
+    this.setState({
+      isVisible: !this.state.isVisible
     });
   }
 
@@ -141,8 +148,10 @@ class App extends Component {
             data={data}
             inputValue={inputValue}
             isDisabled={isDisabled}
+            isVisible={isVisible}
             fetchData={this.fetchData}
             infoData={this.infoData}
+            closeInfo={this.closeInfo}
             handleInput={this.handleInput}
           />
         </Wrapper>
@@ -153,6 +162,7 @@ class App extends Component {
               cityInfo={cityInfo}
               infoData={this.infoData}
               fetchData={this.fetchData}
+              closeInfo={this.closeInfo}
             />
           )}
         </InfoWrapper>

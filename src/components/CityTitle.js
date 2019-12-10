@@ -10,6 +10,12 @@ const Title = styled.h2`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  @media screen and (max-width: 768px) {
+    font-size: 3.5rem;
+    margin: 0;
+    width: 100%;
+  }
 `;
 
 const CityTitle = ({ city }) => {

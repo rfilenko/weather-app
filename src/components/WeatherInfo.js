@@ -10,6 +10,15 @@ const WeatherInfoBlock = styled.section`
   border-bottom-right-radius: 1rem;
   padding-bottom: 2rem;
   width: 300px;
+
+  @media screen and (max-width: 768px) {
+    padding-bottom: 1rem;
+    width: 100%;
+    border-radius: 0;
+    right: inherit;
+    bottom: 0;
+    top: inherit;
+  }
   > p {
     margin: 0;
     font-style: italic;

@@ -23,10 +23,27 @@ const Form = styled.form`
   left: 2rem;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
+
+  @media screen and (max-width: 768px) {
+    left: auto;
+    right: auto;
+    border-radius: 0;
+
+    label {
+      display: none;
+    }
+  }
 `;
 
 const FormComponent = props => {
-  const { inputValue, isDisabled, handleInput, fetchData, infoData } = props;
+  const {
+    inputValue,
+    isDisabled,
+    handleInput,
+    fetchData,
+    infoData,
+    closeInfo
+  } = props;
   return (
     <>
       <Form onSubmit={handleInput}>
@@ -44,7 +61,12 @@ const FormComponent = props => {
           fetchData={fetchData}
           isDisabled={isDisabled}
         />
-        <InfoButton inputWidth="50px" text="Country Info" infoData={infoData} />
+        <InfoButton
+          inputWidth="50px"
+          text="Country Info"
+          infoData={infoData}
+          closeInfo={closeInfo}
+        />
       </Form>
       <WeatherInfo {...props} fetchData={fetchData} />
     </>

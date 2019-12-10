@@ -11,6 +11,11 @@ const CountryInfo = styled.div`
     right: 2rem;
     width: 300px;
 
+    @media screen and (max-width: 768px) {
+      right: 0;
+      width: 100%;
+    }
+
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -43,15 +48,37 @@ const CountryInfo = styled.div`
       margin-right: 0.5rem;
     }
   }
+  button {
+    right: 0.5rem;
+    position: absolute;
+    top: -10px;
+    background: #4299e1;
+    color: #fff;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3em;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.39, 0.58, 0.57, 1);
+    &:hover {
+      transform: scale(1.025) rotate(80deg);
+      opacity: 0.85;
+    }
+  }
 `;
 
 const Info = props => {
-  const { cityInfo } = props;
+  const { cityInfo, closeInfo } = props;
   return (
     <>
       <CountryInfo>
         {props.cityInfo && (
           <div>
+            <button onClick={closeInfo}>&times;</button>
             <p className="flag-wrap">
               <img src={cityInfo.flag} alt="flag" />
               <span>
