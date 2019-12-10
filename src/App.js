@@ -19,7 +19,8 @@ class App extends Component {
       isVisible: false,
       isDisabled: true,
       imgs: [],
-      one: null
+      one: null,
+      temp: null
     };
     this.handleInput = this.handleInput.bind(this);
     this.getInfo = this.getInfo.bind(this);
@@ -50,7 +51,8 @@ class App extends Component {
           cityCountry: `${dataJson.name}, ${dataJson.sys.country}`,
           imgIcon: weather.icon,
           code: sys.country,
-          isVisible: false
+          isVisible: false,
+          temp: dataJson.main.temp
         });
       })
       .catch(err => console.log(err));
@@ -147,6 +149,7 @@ class App extends Component {
         <InfoWrapper>
           {isVisible && (
             <Info
+              data={data}
               cityInfo={cityInfo}
               infoData={this.infoData}
               fetchData={this.fetchData}
