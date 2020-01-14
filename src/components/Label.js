@@ -7,7 +7,6 @@ const Labl = styled.label`
   margin-bottom: 0.5rem;
   font-weight: 700;
   display: block;
-  border: 1px solid rose;
 `;
 
 const Label = ({ htmlFor, text }) => {

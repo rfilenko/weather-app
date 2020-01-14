@@ -99,7 +99,7 @@ const Info = props => {
             <p>
               {" "}
               <span> Currency: </span> {cityInfo.currencies[0].name},
-              <i>{cityInfo.currencies[0].symbol}</i>{" "}
+              <i>{cityInfo.currencies[0].symbol}</i>
             </p>
           </div>
         )}

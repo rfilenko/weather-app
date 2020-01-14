@@ -10,6 +10,17 @@ const Title = styled.h2`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background: rgba(250, 235, 215, 0.41);
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  span {
+    display: block;
+    font-size: 1.25rem;
+    color: darkslategray;
+  }
 
   @media screen and (max-width: 768px) {
     font-size: 3.5rem;
@@ -18,8 +29,15 @@ const Title = styled.h2`
   }
 `;
 
-const CityTitle = ({ city }) => {
-  return <Title> {city}</Title>;
+const CityTitle = ({ city, imgInfo }) => {
+  return (
+    <>
+      <Title>
+        {city}
+        {imgInfo && <span>Image - {imgInfo} </span>}
+      </Title>
+    </>
+  );
 };
 
 export default CityTitle;
