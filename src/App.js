@@ -57,12 +57,11 @@ const App = () => {
     getPhotos();
   };
   const getWeather = () => {
-    const KEY = "1e27d6d230adcdad18474cb51e03fa54";
     let URL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       inputValue +
       "&units=metric&appid=" +
-      KEY;
+      process.env.REACT_APP_WEATHER_KEY;
     fetch(URL)
       .then(res => res.json())
       .then(dataJson => {
@@ -90,18 +89,18 @@ const App = () => {
       pageContent.style.backgroundImage = `url(${defaultBg})`;
     }
   };
-  useEffect(() => {
-    changeBg();
-  }, []);
 
   const getPhotos = async () => {
     try {
       const res = await unsplash.get(`/photos/random/?query=${inputValue}`);
-      setDefaultBg(res.data.urls.regular);
-      setImgInfo(res.data.location.title);
+      if (res) {
+        setDefaultBg(res.data.urls.regular);
+        setImgInfo(res.data.location.title);
 
-      //changes background
-      changeBg();
+        //changes background
+        changeBg();
+        console.log(res.data);
+      }
     } catch (err) {
       console.log(err.message);
     }
