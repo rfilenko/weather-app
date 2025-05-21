@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import unsplash from "./api/unsplash";
 import bg from "./images/defaultBg.jfif";
 
@@ -7,104 +7,132 @@ import FormComponent from "./components/FormComponent";
 import Info from "./components/Info";
 import PageContent from "./components/PageContent";
 import { InfoWrapper, Wrapper } from "./components/Wrapper";
+import { fetchCountryData, fetchWeatherData } from "./utils/fetchData";
 
 const App = () => {
   const [data, setData] = useState(null);
   const [inputValue, setInputValue] = useState("Prague");
   const [cityInfo, setCityInfo] = useState(null);
   const [code, setCode] = useState(null);
-  const [temp, setTemp] = useState(null);
+  const [, setTemp] = useState(null);
   const [imgInfo, setImgInfo] = useState(null);
   const [defaultBg, setDefaultBg] = useState("");
   const [cityCountry, setCityCountry] = useState("");
-  const [imgIcon, setImgIcon] = useState("");
+  const [, setImgIcon] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
+  const isMounted = useRef(true);
 
   //get country information data
-  const getInfo = async () => {
-    try {
-      const res = await fetch("https://restcountries.eu/rest/v2/alpha/" + code);
-      const json = await res.json();
-      const data = await json;
-      setCityInfo(data);
-      setIsVisible(!isVisible);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const getInfo = useCallback(async () => {
+    if (!code) return;
 
-  // get data
-  const infoData = () => {
+    try {
+      if (isMounted.current) {
+        setCityInfo(await fetchCountryData(code));
+        setIsVisible(prev => !prev);
+      }
+    } catch (err) {
+      console.error('Error fetching country info:', err);
+    }
+  }, [code]);
+
+  const infoData = useCallback(() => {
     if (data) {
       getInfo();
     }
-  };
+  }, [data, getInfo]);
 
-  //handle input
-  const handleInput = e => {
+  const handleInput = useCallback((e) => {
     e.preventDefault();
     setInputValue(e.target.value);
     setIsDisabled(false);
-  };
-
-  const closeInfo = () => {
-    setIsVisible(!isVisible);
-  };
-  const fetchData = () => {
-    //get weather data
-    getWeather();
-    getPhotos();
-  };
-  const getWeather = () => {
-    let URL =
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
-      inputValue +
-      "&units=metric&appid=" +
-      process.env.REACT_APP_WEATHER_KEY;
-    fetch(URL)
-      .then(res => res.json())
-      .then(dataJson => {
-        const { weather, sys } = dataJson;
-        setData(dataJson);
-        setCityCountry(`${dataJson.name}, ${dataJson.sys.country}`);
-        setIsVisible(false);
-        setImgIcon(weather.icon);
-        setCode(sys.country);
-        setTemp(dataJson.main.temp);
-      })
-      .catch(err => console.log(err));
-  };
-  useEffect(() => {
-    fetchData();
-    setInputValue("");
   }, []);
 
-  //changing body background
-  const changeBg = () => {
-    const pageContent = document.querySelector(".page-content");
-    pageContent.style.backgroundImage = `url(${bg})`;
+  const closeInfo = useCallback(() => {
+    setIsVisible(prev => !prev);
+  }, []);
 
-    if (defaultBg.length > 0) {
-      pageContent.style.backgroundImage = `url(${defaultBg})`;
-    }
-  };
+  const getWeather = useCallback(async () => {
+    if (!inputValue) return;
 
-  const getPhotos = async () => {
     try {
-      const res = await unsplash.get(`/photos/random/?query=${inputValue}`);
-      if (res) {
-        setDefaultBg(res.data.urls.regular);
-        setImgInfo(res.data.location.title);
+      const weatherData = await fetchWeatherData(inputValue);
 
-        //changes background
-        changeBg();
-        console.log(res.data);
+      if (isMounted.current) {
+        const { weather, sys, name, main } = weatherData;
+        setData(weatherData);
+        setCityCountry(`${name}, ${sys.country}`);
+        setIsVisible(false);
+        setImgIcon(weather[0]?.icon || '');
+        setCode(sys.country);
+        setTemp(main?.temp);
       }
     } catch (err) {
-      console.log(err.message);
+      console.error('Error fetching weather:', err);
+      throw err; // Re-throw to be caught by the caller
     }
-  };
+  }, [inputValue]);
+
+  //changing body background
+  const changeBg = useCallback(() => {
+    const pageContent = document.querySelector(".page-content");
+    if (pageContent) {
+      pageContent.style.backgroundImage = defaultBg
+        ? `url(${defaultBg})`
+        : `url(${bg})`;
+    }
+  }, [defaultBg]);
+
+  const getPhotos = useCallback(async () => {
+    if (!inputValue) return;
+
+    try {
+      const res = await unsplash.get(`/photos/random/?query=${inputValue}`);
+      if (res?.data?.urls?.regular && isMounted.current) {
+        setDefaultBg(res.data.urls.regular);
+        setImgInfo(res.data.location?.title || '');
+      }
+    } catch (err) {
+      console.error("Error fetching photos:", err);
+    }
+  }, [inputValue]);
+
+  const fetchData = useCallback(async () => {
+    if (!isMounted.current) return;
+
+    try {
+      await getWeather();
+      await getPhotos();
+    } catch (error) {
+      console.error("Error in fetchData:", error);
+      // Consider adding user feedback here
+    }
+  }, [getWeather, getPhotos]);
+
+  // Initialize data on component mount
+  useEffect(() => {
+    isMounted.current = true;
+    const init = async () => {
+      try {
+        await fetchData();
+        setInputValue("");
+      } catch (error) {
+        console.error("Initialization error:", error);
+      }
+    };
+
+    init();
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  // Update background when defaultBg changes
+  useEffect(() => {
+    changeBg();
+  }, [changeBg]);
 
   return (
     <div className="App">

@@ -37,7 +37,7 @@ export const Button = ({ text }) => {
 };
 export const WeatherButton = ({ text, fetchData, isDisabled }) => {
   return (
-    <Btn primary onClick={fetchData} disabled={isDisabled}>
+    <Btn primary="true" onClick={fetchData} disabled={isDisabled}>
       {text}
     </Btn>
   );
