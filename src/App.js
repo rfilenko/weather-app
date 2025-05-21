@@ -127,6 +127,7 @@ const App = () => {
     return () => {
       isMounted.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update background when defaultBg changes
